@@ -2,21 +2,27 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
-class Pegawai extends Model
+class Pegawai extends Authenticatable
 {
-    use HasFactory;
+    use Notifiable;
+
     protected $table = 'pegawai';
-    protected $primaryKey = 'id';
+    protected $primaryKey = 'id_pegawai';
 
     protected $fillable = [
-        'id',
+        'id_pegawai',
         'nama_pegawai',
         'alamat',
         'jenis_kelamin',
         'jabatan',
         'status',
     ];
+
+    public function keluhan()
+    {
+        return $this->hasMany(Keluhan::class, 'id_pegawai');
+    }
 }

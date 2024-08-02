@@ -1,0 +1,4 @@
+<li class="menu-header"><i class="fas fa-landmark"></i><span> Menu Utama Manager</span></li>
+<li class="nav-item{{ request()->is('kendaraan') ? ' active' : '' }}"><a href="{{ url('/manager/kendaraan') }}"><i class="fas fa-users"></i><span>Kendaraan</span></a></li>
+<li class="nav-item{{ request()->is('pegawai') ? ' active' : '' }}"><a href="{{ url('/manager/pegawai') }}"><i class="fas fa-user-graduate"></i><span>Pegawai</span></a></li>
+<li class="nav-item{{ request()->is('supplier') ? ' active' : '' }}"><a href="{{ url('/manager/supplier') }}"><i class="far fa-bell"></i><span>Supplier</span></a></li>

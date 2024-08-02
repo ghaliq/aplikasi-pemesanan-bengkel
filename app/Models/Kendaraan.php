@@ -8,8 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Kendaraan extends Model
 {
     use HasFactory;
+
     protected $table = 'kendaraan';
-    protected $primaryKey = 'no_pol';
+    protected $primaryKey = 'no_pol'; // Tetapkan 'no_pol' sebagai primary key
 
     protected $fillable = [
         'no_pol',
@@ -17,4 +18,9 @@ class Kendaraan extends Model
         'merek',
         'warna',
     ];
+
+    public function keluhan()
+    {
+        return $this->hasMany(Keluhan::class, 'no_pol');
+    }
 }

@@ -1,0 +1,4 @@
+<li class="menu-header"><i class="fas fa-landmark"></i><span> Menu Utama Pelanggan</span></li>
+<li class="nav-item{{ request()->is('customer') ? ' active' : '' }}"><a href="{{ url('/pelanggan/customer') }}"><i class="fas fa-user-friends"></i><span> Customer</span></a></li>
+<li class="nav-item{{ request()->is('barang') ? ' active' : '' }}"><a href="{{ url('/pelanggan/barang') }}"><i class="fas fa-chalkboard-teacher"></i><span>Barang</span></a></li>
+<li class="nav-item{{ request()->is('keluhan') ? ' active' : '' }}"><a href="{{ url('/pelanggan/keluhan') }}"><i class="fas fa-book-open"></i><span>Keluhan</span></a></li>

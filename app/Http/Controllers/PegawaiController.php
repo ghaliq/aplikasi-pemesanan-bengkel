@@ -3,88 +3,87 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pegawai;
-use Illuminate\View\View;
 use Illuminate\Http\Request;
-use Illuminate\Http\RedirectResponse;
 
 class PegawaiController extends Controller
 {
-    public function index(): View
+    public function index()
     {
-       $dataPegawai = Pegawai::latest()->paginate(10);
-       return view('pegawai.index',compact('dataPegawai'));
-    }
-    public function create(): View
-    {
-        return view('pegawai.create');
-    }
-    public function store(Request $request): RedirectResponse
-    {
-       
-        //validate form
-        $request->validate([
-            'id'                 => 'required|unique:pegawai,id',
-            'nama_pegawai'      => 'required',
-            'alamat'             => 'required',
-            'jenis_kelamin'      => 'required',
-            'jabatan'           => 'required',
-            'status'           => 'required',
-        ]);
-
-        Pegawai::create([
-            'id'                    => $request->id,
-            'nama_pegawai'         => $request->nama_pegawai,
-            'alamat'                =>  $request->alamat,
-            'jenis_kelamin'         =>  $request->jenis_kelamin,
-            'jabatan'                 => $request->jabatan,
-            'status'                =>  $request->status,
-        ]);
-        //redirect to index
-        return redirect()->route('pegawai.index')->with(['success' => 'Data Berhasil Disimpan!']);
+        $pegawais = Pegawai::orderBy('id_pegawai')->paginate(10);
+        return view('levelAdmin/pegawai.index', compact('pegawais'));
     }
 
-    public function edit(string $id): View
+    public function create()
     {
-        $dataPegawai = Pegawai::findOrFail($id);
-        return view('pegawai.edit', compact('dataPegawai'));
+        return view('levelAdmin/pegawai.create');
     }
 
-    public function show(string $id): View
-    {
-        $pegawai = Pegawai::findOrFail($id);
-
-        return view('pegawai.show', compact('pegawai'));
-    }
-
-    public function update(Request $request, $id): RedirectResponse
+    public function store(Request $request)
     {
         $request->validate([
-            'id'                 => 'required',
-            'nama_pegawai'      => 'required',
-            'alamat'             => 'required',
-            'jenis_kelamin'      => 'required',
-            'jabatan'           => 'required',
-            'status'           => 'required'
+            'nama_pegawai' => 'required|string|max:150',
+            'alamat' => 'required|string',
+            'jenis_kelamin' => 'required|in:L,P',
+            'jabatan' => 'required|in:Teknisi,Admin,APV',
+            'status' => 'required|in:Aktif,Tidak_Aktif',
         ]);
 
-        $pegawai = Pegawai::findOrFail($id);
-        $pegawai->update([
-            'id'                    => $request->id,
-            'nama_pegawai'         => $request->nama_pegawai,
-            'alamat'                =>  $request->alamat,
-            'jenis_kelamin'         =>  $request->jenis_kelamin,
-            'jabatan'         =>  $request->jabatan,
-            'status'         =>  $request->status
-        ]);
-        //redirect to index
-        return redirect()->route('pegawai.index')->with(['success' => 'Data Berhasil Disimpan!']);
+        $pegawai = new Pegawai();
+        $pegawai->nama_pegawai = $request->nama_pegawai;
+        $pegawai->alamat = $request->alamat;
+        $pegawai->jenis_kelamin = $request->jenis_kelamin;
+        $pegawai->jabatan = $request->jabatan;
+        $pegawai->status = $request->status;
+
+        // Mengatur id_pegawai secara otomatis dari yang terkecil
+        $lastPegawai = Pegawai::orderBy('id_pegawai', 'desc')->first();
+        $nextId = ($lastPegawai) ? $lastPegawai->id_pegawai + 1 : 1;
+        $pegawai->id_pegawai = str_pad($nextId, 5, '0', STR_PAD_LEFT); // Memastikan maksimal 5 digit dengan leading zeros
+
+        $pegawai->save();
+
+        return redirect()->route('pegawai.index')->with('success', 'Pegawai berhasil ditambahkan.');
     }
 
-    public function destroy($id): RedirectResponse
-    {
-        $pegawai = Pegawai::findOrFail($id);
-        $pegawai->delete();
-        return redirect()->route('pegawai.index')->with(['success' => 'Data Berhasil Dihapus!']);
-    }
+    public function show($id_pegawai)
+{
+    $pegawai = Pegawai::findOrFail($id_pegawai);
+    return view('levelAdmin/pegawai.show', compact('pegawai'));
 }
 
+public function edit($id_pegawai)
+{
+    $dataPegawai = Pegawai::findOrFail($id_pegawai);
+    return view('levelAdmin/pegawai.edit', compact('dataPegawai'));
+}
+
+
+public function update(Request $request, $id_pegawai)
+{
+    $request->validate([
+        'nama_pegawai' => 'required|string|max:150',
+        'alamat' => 'required|string',
+        'jenis_kelamin' => 'required|in:L,P',
+        'jabatan' => 'required|in:Teknisi,Admin,APV',
+        'status' => 'required|in:Aktif,Tidak_Aktif',
+    ]);
+
+    $pegawai = Pegawai::findOrFail($id_pegawai);
+    $pegawai->nama_pegawai = $request->nama_pegawai;
+    $pegawai->alamat = $request->alamat;
+    $pegawai->jenis_kelamin = $request->jenis_kelamin;
+    $pegawai->jabatan = $request->jabatan;
+    $pegawai->status = $request->status;
+
+    $pegawai->save();
+
+    return redirect()->route('pegawai.index')->with('success', 'Pegawai berhasil diperbarui.');
+}
+public function destroy($id_pegawai)
+{
+    $pegawai = Pegawai::findOrFail($id_pegawai);
+    $pegawai->delete();
+
+    return redirect()->route('pegawai.index')->with('success', 'Pegawai berhasil dihapus.');
+}
+}
