@@ -22,10 +22,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $this->registerPolicies();
+        // $this->registerPolicies();
 
-        Auth::provider('pegawai', function ($app, array $config) {
-            return new PegawaiUserProvider($config['model']);
-        });
+        // Auth::provider('pegawai', function ($app, array $config) {
+        //     return new PegawaiUserProvider($config['model']);
+        // });
     }
 }
