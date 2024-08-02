@@ -151,7 +151,7 @@
         &nbsp
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <div class="ml-auto my-2 my-lg-0">
-        <a class="book_now text-center btn btn-block" href="#target">
+        <a class="book_now text-center btn btn-block" href="levelAdmin/customer">
             Pesan
         </a>
     </div>
